@@ -3,44 +3,101 @@ class ClientsRepository {
     this.dataBase = dataBase;
     this.findAll = this.findAll.bind(this);
     this.findById = this.findById.bind(this);
-    this.findByEmail = this.findByEmail.bind(this);
     this.insert = this.insert.bind(this);
     this.update = this.update.bind(this);
-    this.delete = this.delete.bind(this);
+    this.remove = this.remove.bind(this);
   }
 
   async findAll() {
-    const sql = 'select * from clients';
+    const sqlClients = 'select * from clients';
     let clients = null;
     let connection = null;
     try {
       connection = await this.dataBase.getConnection();
-      const data = await connection.query(sql);
-      clients = [...data]
+      const dataClients = await connection.query(sqlClients);
+      clients = [...dataClients];
 
     } catch (error) {
-      console.log('errooooorrrrororor');
+      console.log('não foi possível conectar', error);
 
     }finally{
       connection && connection.end(); 
     }
     return clients;
   }
-  findById(id) {
-
+  async findById(id) {
+      const sql = 'select * from clients where id = ?';
+      const params = [id];
+      let client = null;
+      let connection = null;
+      try {
+          connection = await this.dataBase.getConnection();
+          const data = await connection.query(sql, params);
+          const rows = [...data]
+          if (rows.length > 0) {
+              client = rows[0];
+          }
+      } catch (error) {
+          console.log('Falha ao buscar os dados');
+          throw error;
+      } finally {
+          connection && connection.end();
+      }
+      return client
   }
-  findByEmail(email) {
 
-  }
-  insert(client) {
+  async insert(client) {
+    const sql = 'insert into clients(razao_social, cnpj, telefone, endereco, faturamento_declarado, banco, agencia, conta) values (?,?,?,?,?,?,?,?)';
+        const params = [client.razao_social, client.cnpj, client.telefone, client.endereco, client.faturamento_declarado, client.banco, client.agencia, client.conta];
+        let connection = null;
+        let result = null;
+        try {
+            connection = await this.dataBase.getConnection();
+            const { insertId } = await connection.query(sql, params);
+            result = insertId;
+        } catch (error) {
+            console.log('Falha ao buscar os dados');
+            throw error;
+        } finally {
+            connection && connection.end();
+        }
+        return result;
+    }
 
+    async update(client) {
+      const sql = "update clients set razao_social = ?, cnpj = ?, telefone = ?, endereco = ?, faturamento_declarado = ?, banco = ?, agencia = ?, conta = ? where id = ?";
+      const params = [client.razao_social, client.cnpj, client.telefone, client.endereco, client.faturamento_declarado, client.banco, client.agencia, client.conta, client.id];
+      let ok = false;
+      let connection = null;
+      try {
+          connection = await this.dataBase.getConnection();
+          const result = await connection.query(sql, params);
+          ok = result.affectedRows > 0;
+      } catch (error) {
+          console.log(error);
+          throw error;
+      } finally {
+          connection && connection.end();
+      }
+      return ok;
   }
-  update(id, client) {
-
+  async remove(id) {
+    const sql = "delete from clients where id = ?";
+        const params = [id];
+        let ok = false;
+        let connection = null;
+        try {
+            connection = await this.dataBase.getConnection();
+            const result = await connection.query(sql, params);
+            ok = result.affectedRows > 0;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        } finally {
+            connection && connection.end();
+        }
+        return ok;
+    }
   }
-  delete(id) {
-
-  }
-}
 
 module.exports = ClientsRepository;
