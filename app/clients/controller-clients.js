@@ -44,10 +44,7 @@ class ClientController {
       cnpj,
       telefone,
       endereco,
-      faturamento_declarado,
-      banco,
-      agencia,
-      conta
+      faturamento_declarado
     } = request.body;
     this.repository
       .insert({
@@ -55,10 +52,7 @@ class ClientController {
         cnpj,
         telefone,
         endereco,
-        faturamento_declarado,
-        banco,
-        agencia,
-        conta
+        faturamento_declarado
       })
       .then(() => {
         response.sendStatus(201);
@@ -75,10 +69,7 @@ class ClientController {
       cnpj,
       telefone,
       endereco,
-      faturamento_declarado,
-      banco,
-      agencia,
-      conta 
+      faturamento_declarado
     } = request.body;
     this.repository.update({ 
       id, 
@@ -86,10 +77,7 @@ class ClientController {
       cnpj,
       telefone,
       endereco,
-      faturamento_declarado,
-      banco,
-      agencia,
-      conta
+      faturamento_declarado
      })
         .then(ok => {
             if (ok) {
