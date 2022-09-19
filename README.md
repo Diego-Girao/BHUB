@@ -21,6 +21,4 @@ Construir uma API CRUD simples para controle dos clientes da BHub. porém este d
 - Node.js
 - Express
 - MariaDB
-- Postman
-
-realizado por: Diego Girão
+- [Postman - Para testes de requisições e documentação da API](https://documenter.getpostman.com/view/11754682/2s7YtXfrgF)
